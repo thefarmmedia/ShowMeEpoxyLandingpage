@@ -1,0 +1,267 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Show Me Epoxy Calculator</title><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></head><body data-tool="calculator"><section id="toolRoot" style="padding:80px 0;background:#134db4;position:relative">
+<style>
+@keyframes calcGlow{0%,100%{opacity:0}50%{opacity:1}}.calc-glow-card,#cUnlockCard,#cResultBox,#cWhyBox{position:relative;box-shadow:0 0 30px rgba(235,251,59,.25),0 0 60px rgba(235,251,59,.1),inset 0 0 0 1px rgba(235,251,59,.3)}.calc-glow-card::after,#cUnlockCard::after,#cResultBox::after,#cWhyBox::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 50px rgba(235,251,59,.45),0 0 100px rgba(235,251,59,.18),inset 0 0 0 1px rgba(235,251,59,.55);opacity:0;animation:calcGlow 3s ease-in-out infinite;pointer-events:none}
+
+.calc-outer-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;max-width:1000px;margin:0 auto}
+.calc-left{order:1}
+.calc-right{order:2}
+.calc-why{order:3}
+/* Standalone calculator page: center everything in a single column */
+.calc-outer-grid{grid-template-columns:minmax(0,560px)!important;justify-content:center!important}
+@media(max-width:768px){
+  .calc-outer-grid{grid-template-columns:1fr!important;gap:16px}
+  .calc-left{order:2!important}
+  .calc-right{order:3!important}
+  .calc-why{order:1!important;width:100%}
+  #calculator{padding:36px 0!important}
+  #calculator h2{font-size:26px!important}
+  .calc-intro-block{margin-bottom:20px!important}
+  .calc-glow-card{padding:20px!important}
+  .calc-outer-grid [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+}
+</style>
+<div class="container" style="position:relative;z-index:1">
+
+<div class="calc-outer-grid">
+<!-- LEFT: Project Details -->
+<p id="selectedColor" hidden style="margin:0;padding:16px 24px 0;color:#134db4;font-weight:700"></p><div class="calc-left calc-glow-card" style="background:#fff;border-radius:20px;padding:32px">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:28px">
+<div id="cStep1" style="flex:1;padding:10px 14px;border-radius:10px;background:rgba(235,251,59,.14);border:1px solid rgba(235,251,59,.45);font-size:13px;font-weight:700;color:#26344d;text-align:center">1. Project details</div>
+<div style="color:#62708c;font-weight:800;font-size:16px">→</div>
+<div id="cStep2" style="flex:1;padding:10px 14px;border-radius:10px;background:#dce3ef;border:1px solid #dce3ef;font-size:13px;font-weight:700;color:#62708c;text-align:center">2. Your estimate</div>
+</div>
+<h3 style="font-family:var(--font-cond);font-size:22px;font-weight:800;color:#26344d;margin-bottom:6px">Step 1: Enter Project Details</h3>
+<p style="font-size:13px;color:#26344d;margin-bottom:22px">Build your project so the calculator can start working immediately.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+<div>
+<label for="cProjectType" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Project Type</label>
+<select id="cProjectType" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)">
+<option>Garage Floor</option><option>Patio / Porch</option><option>Basement</option><option>Shop / Outbuilding</option>
+</select>
+</div>
+<div>
+<label for="cSqft" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Square Footage</label>
+<input id="cSqft" min="1" placeholder="e.g. 550" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)" type="number"/>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+<div>
+<label for="cSystem" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Coating System</label>
+<select id="cSystem" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)">
+<option>Full Broadcast Flake</option><option>Metallic Floor</option>
+</select>
+</div>
+<div>
+<label for="cCondition" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Concrete Condition</label>
+<select id="cCondition" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)">
+<option>Good Condition</option><option>Average / Minor Repairs</option><option>Cracks / Pitting / More Prep</option>
+</select>
+</div>
+</div>
+<div style="margin-bottom:20px">
+<label for="cDifficulty" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Project Layout</label>
+<select id="cDifficulty" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)">
+<option>Standard Open Area</option><option>Some Edges / Obstacles</option><option>Tight / Detailed Layout (More Labor Required)</option>
+</select>
+</div>
+<!-- Live Preview -->
+<div style="margin-bottom:18px;padding:20px;border-radius:16px;background:linear-gradient(180deg,rgba(235,251,59,.15),rgba(235,251,59,.04));border:1px solid rgba(235,251,59,.35);position:relative;overflow:hidden">
+<div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#ebfb3b;margin-bottom:6px">🔒 Live Estimate Preview</div>
+<div style="font-size:12px;color:#26344d;margin-bottom:4px">Your Estimated Price Range</div>
+<div style="position:relative;margin:6px 0 10px">
+<div id="cPreviewRange" style="font-size:42px;font-weight:900;color:#26344d;line-height:1;filter:blur(7px);user-select:none">$4,850 – $6,200</div>
+<div id="cPreviewOverlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#26344d;text-align:center">Enter square footage to start calculating…</div>
+</div>
+<div id="cLiveStatus" style="padding:10px 12px;border-radius:10px;background:#dce3ef;border:1px solid #dce3ef;color:#26344d;font-size:13px;font-weight:600">Estimated Range: Calculating…</div>
+<div style="margin-top:12px;padding:10px 12px;border-radius:10px;background:#dce3ef;border:1px solid #dce3ef;font-size:13px;color:#26344d">Enter your info to reveal your ballpark price range.</div>
+</div>
+<button onclick="cShowUnlock()" style="width:100%;background:#ebfb3b;color:#0d2d6e;border:none;border-radius:12px;padding:15px 20px;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 0 24px rgba(235,251,59,.35)">Continue to My Price →</button>
+<button onclick="cReset()" style="width:100%;background:transparent;color:#26344d;border:1px solid #dce3ef;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:10px">Reset Calculator</button>
+</div>
+<!-- RIGHT: Unlock + Result -->
+<div class="calc-right">
+<!-- Step 2 unlock form -->
+<div id="cUnlockCard" style="display:none;background:#fff;border-radius:20px;padding:32px;margin-bottom:20px">
+<h3 style="font-family:var(--font-cond);font-size:22px;font-weight:800;color:#26344d;margin-bottom:6px">Step 2: Unlock Your Price</h3>
+<p style="font-size:14px;color:#26344d;margin-bottom:20px">One step away. Enter your info to instantly reveal your ballpark quote.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+<div>
+<label for="cName" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Full Name</label>
+<input id="cName" placeholder="John Smith" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)" type="text"/>
+</div>
+<div>
+<label for="cPhone" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Phone Number</label>
+<input id="cPhone" placeholder="(573) 555-1234" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)" type="tel"/>
+</div>
+</div>
+<div style="margin-bottom:12px">
+<label for="cAddress" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Property Address</label>
+<input id="cAddress" placeholder="123 Main St, Jefferson City, MO" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)" type="text"/>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+<div>
+<label for="cEmail" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">Email Address</label>
+<input id="cEmail" placeholder="you@email.com" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)" type="email"/>
+</div>
+<div>
+<label for="cZip" style="display:block;font-size:13px;font-weight:600;color:#26344d;margin-bottom:7px">ZIP Code</label>
+<input id="cZip" placeholder="65101" style="width:100%;padding:13px 14px;border-radius:10px;border:1px solid #dce3ef;background:#fff;color:#26344d;font-size:15px;outline:none;font-family:var(--font)" type="text"/>
+</div>
+</div>
+<button id="cRevealBtn" onclick="cRevealPrice()" style="width:100%;background:#ebfb3b;color:#0d2d6e;border:none;border-radius:12px;padding:15px 20px;font-size:16px;font-weight:800;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 0 24px rgba(235,251,59,.35)">Reveal My Ballpark Price</button>
+<button class="back" onclick="document.querySelector('.calc-left').style.display='block';document.getElementById('cUnlockCard').style.display='none'" type="button">← Back to project details</button></div>
+<!-- Result box -->
+<div id="cResultBox" style="display:none;background:#fff;border-radius:20px;padding:32px">
+<div style="padding:24px;border-radius:16px;background:linear-gradient(180deg,rgba(235,251,59,.18),rgba(235,251,59,.04));border:1px solid rgba(235,251,59,.35)">
+<div style="font-size:12px;color:#26344d;margin-bottom:6px">Estimated Ballpark Investment</div>
+<div id="cPriceRange" style="font-size:48px;font-weight:900;color:#26344d;line-height:1;margin-bottom:12px">$0 – $0</div>
+<div id="cResultText" style="font-size:14px;color:#26344d;line-height:1.7;margin-bottom:18px"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-bottom:16px">
+<div style="font-size:14px;color:#26344d">✔ Full mechanical diamond grinding</div>
+<div style="font-size:14px;color:#26344d">✔ Crack &amp; surface repairs as needed</div>
+<div style="font-size:14px;color:#26344d">✔ Professional coating system install</div>
+<div style="font-size:14px;color:#26344d">✔ Durable long-term finish system</div>
+</div>
+<p style="font-size:12px;color:#26344d;margin:0">This is a ballpark estimate only. Final pricing confirmed after on-site measurement, slab evaluation, and finish selection.</p>
+</div>
+<div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+<a href="https://showmeepoxy.com/contact.html" style="flex:1;display:block;background:#ebfb3b;color:#0d2d6e;font-weight:700;font-size:15px;padding:14px 20px;border-radius:10px;text-decoration:none;text-align:center;min-width:180px" target="_top">Schedule My Free On-Site Quote →</a>
+<a href="tel:5736442422" style="flex:1;display:block;border:1.5px solid #dce3ef;color:#26344d;font-weight:600;font-size:15px;padding:14px 20px;border-radius:10px;text-decoration:none;text-align:center;min-width:180px">📞 (573) 644-2422</a>
+</div>
+<button class="back" onclick="cReset()" type="button">Start a new estimate</button></div>
+</div>
+<!-- Why box -->
+<div class="calc-why" hidden="" id="cWhyBox" style="background:#fff;border-radius:20px;padding:28px"></div>
+</div>
+</div>
+
+</section><style>
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:white;font-family:Inter,Arial,sans-serif;line-height:1.5}:root{--font:Inter,Arial,sans-serif;--font-cond:'Barlow Condensed',sans-serif}
+#toolRoot{padding:0!important;background:#fff!important}.calc-outer-grid{display:block!important;max-width:none;margin:0}.calc-left,#cUnlockCard,#cResultBox{padding:24px!important;border-radius:0!important;box-shadow:none!important;margin:0!important}.calc-left:after,#cUnlockCard:after,#cResultBox:after,#cWhyBox{display:none!important}.calc-left h3{display:none}.calc-left>p{margin:0 0 18px!important}input,select{border:1px solid #ccd6e6!important;border-radius:6px!important;background:#f7f9fc!important;color:#26344d!important}input:focus,select:focus{outline:2px solid #134db4!important;outline-offset:2px}button{box-shadow:none!important;border-radius:6px!important}#cStep1,#cStep2{color:#134db4!important;background:#f0f5ff!important;border:1px solid #dce3ef!important}#cPreviewRange,#cPriceRange{font-size:36px!important}.back{background:none;color:#134db4;border:0;font:700 13px Inter,Arial,sans-serif;cursor:pointer;padding:12px 0 0}#cColorBanner{color:#134db4!important;margin:0 0 12px!important}#cColorBannerName{color:#134db4!important}
+.calc-outer-grid [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr 1fr!important}
+@media(max-width:600px){.calc-left,#cUnlockCard,#cResultBox{padding:18px!important}.calc-outer-grid [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}#cPriceRange{font-size:32px!important}}
+</style><script>function smeTrack(event,data){parent.postMessage({type:"sme-track",event,data},location.origin);}
+
+const C_WEBHOOK='https://services.leadconnectorhq.com/hooks/UDCPiPWt9uV7guaCe7PH/webhook-trigger/cf22005c-1be6-4647-8009-5d5ef2c85ddd';
+// Selected floor color passed in from the Floor Visualizer (/floor-visualizer.html?color=Slug-Name), if any.
+// Backwards-compatible: does nothing when the param is absent, so normal calculator traffic is unaffected.
+var cSelectedColor=(function(){
+  try{
+    var raw=new URLSearchParams(window.location.search).get('color');
+    if(!raw)return null;
+    var name=decodeURIComponent(raw).replace(/-/g,' ').trim();
+    if(!name)return null;
+    var banner=document.getElementById('cColorBanner');
+    var bannerName=document.getElementById('cColorBannerName');
+    if(banner&&bannerName){bannerName.textContent=name;banner.style.display='block';}
+    return name;
+  }catch(e){return null;}
+})();
+function cFmt(v){return '$'+Number(v).toLocaleString();}
+function cSanitizePhone(p){return p.replace(/[^\d+]/g,'').trim();}
+function cSplitName(n){const p=n.trim().split(/\s+/);return{firstName:p.shift()||'',lastName:p.join(' ')};}
+function cGetData(){
+  const sqft=parseFloat(document.getElementById('cSqft').value);
+  if(!sqft||sqft<=0)return null;
+  const system=document.getElementById('cSystem').value;
+  const condition=document.getElementById('cCondition').value;
+  const difficulty=document.getElementById('cDifficulty').value;
+  const projectType=document.getElementById('cProjectType').value;
+  let lo=system==='Metallic Floor'?13.0:5.75;
+  let hi=system==='Metallic Floor'?16.0:8.00;
+  if(condition==='Average / Minor Repairs'){lo+=.50;hi+=.50;}
+  else if(condition==='Cracks / Pitting / More Prep'){lo+=.75;hi+=.75;}
+  if(difficulty.startsWith('Tight')){lo+=1.0;hi+=1.0;}
+  const lowTotal=Math.round(sqft*lo),highTotal=Math.round(sqft*hi);
+  return{projectType,sqft:String(sqft),system,condition,difficulty,
+    lowRate:lo.toFixed(2),highRate:hi.toFixed(2),lowTotal,highTotal,
+    estimatedRange:cFmt(lowTotal)+' – '+cFmt(highTotal)};
+}
+function cUpdatePreview(){
+  const data=cGetData();
+  if(!data){
+    document.getElementById('cPreviewRange').textContent='$4,850 – $6,200';
+    document.getElementById('cPreviewOverlay').textContent='Enter square footage to start calculating…';
+    document.getElementById('cLiveStatus').textContent='Estimated Range: Calculating…';
+    return;
+  }
+  document.getElementById('cPreviewRange').textContent=data.estimatedRange;
+  document.getElementById('cPreviewOverlay').textContent='Locked — unlock below to reveal';
+  document.getElementById('cLiveStatus').textContent='Calculating based on '+Number(data.sqft).toLocaleString()+' sq ft…';
+}
+['cProjectType','cSqft','cSystem','cCondition','cDifficulty'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el){el.addEventListener('input',cUpdatePreview);el.addEventListener('change',cUpdatePreview);}
+});
+function cShowUnlock(){
+  const data=cGetData();
+  if(!data){alert('Please enter the approximate square footage.');return;}
+  document.getElementById('cUnlockCard').style.display='block';document.querySelector('.calc-left').style.display='none';
+  document.getElementById('cWhyBox').style.display='none';
+  const s2=document.getElementById('cStep2');
+  s2.style.background='rgba(235,251,59,.14)';
+  s2.style.border='1px solid rgba(235,251,59,.45)';
+  s2.style.color='#fff';
+  document.getElementById('cUnlockCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+async function cRevealPrice(){
+  const data=cGetData();
+  if(!data){alert('Please complete your project details first.');return;}
+  const name=document.getElementById('cName').value.trim();
+  const phone=cSanitizePhone(document.getElementById('cPhone').value.trim());
+  const email=document.getElementById('cEmail').value.trim();
+  const zip=document.getElementById('cZip').value.trim();
+  const address=document.getElementById('cAddress').value.trim();
+  if(!name||!phone||!email||!zip||!address){alert('Please complete all contact fields.');return;}
+  const {firstName,lastName}=cSplitName(name);
+  const btn=document.getElementById('cRevealBtn');
+  btn.disabled=true;btn.textContent='Revealing Price...';
+  const fd=new FormData();
+  fd.append('name',name);fd.append('first_name',firstName);fd.append('last_name',lastName);
+  fd.append('phone',phone);fd.append('email',email);fd.append('zip',zip);fd.append('address',address);
+  fd.append('project_type',data.projectType);fd.append('sq_ft',data.sqft);
+  fd.append('system',data.system);fd.append('concrete_condition',data.condition);
+  fd.append('layout_difficulty',data.difficulty);
+  fd.append('estimated_price_low',String(data.lowTotal));
+  fd.append('estimated_price_high',String(data.highTotal));
+  fd.append('estimated_range',data.estimatedRange);
+  fd.append('low_rate_per_sqft',data.lowRate);fd.append('high_rate_per_sqft',data.highRate);
+  if(cSelectedColor)fd.append('selected_floor_color',cSelectedColor);
+  fd.append('lead_source','Show Me Epoxy Landing Page Calculator');fd.append('page_url',window.location.href);
+  var smeDelivered=null;
+  try{await fetch(C_WEBHOOK,{method:'POST',body:fd});smeDelivered=true;}catch(e){smeDelivered=false;console.error(e);}
+  /* This marks the lead as SUBMITTED FROM THE BROWSER, which is the furthest
+     this page can honestly verify. The GoHighLevel webhook is cross-origin and
+     returns no CORS headers, so fetch can reject even when the POST was
+     delivered — keying the event off that would under-count real leads. The
+     delivery_confirmed flag carries what we do know, and true confirmation has
+     to come from the GoHighLevel side. No name, phone, email, address or ZIP
+     is ever sent to analytics. */
+  smeTrack('lead_submitted',{project_type:data.projectType,system:data.system,concrete_condition:data.condition,sq_ft:Number(data.sqft)||null,selected_floor_color:cSelectedColor||null,form:'calculator',delivery_confirmed:smeDelivered});
+  document.getElementById('cPriceRange').textContent=data.estimatedRange;
+  document.getElementById('cResultText').innerHTML='Based on <strong>'+Number(data.sqft).toLocaleString()+' sq ft</strong>, your selected system, and concrete condition, your project falls in the range above. The next step is a free on-site visit to confirm measurements and evaluate the slab.';
+  document.getElementById('cUnlockCard').style.display='none';
+  document.getElementById('cResultBox').style.display='block';
+  document.getElementById('cResultBox').scrollIntoView({behavior:'smooth',block:'nearest'});
+  btn.disabled=false;btn.textContent='Reveal My Exact Ballpark Price';
+}
+function cReset(){
+  ['cProjectType','cSystem','cCondition','cDifficulty'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});
+  document.getElementById('cSqft').value='';
+  document.getElementById('cName').value='';
+  document.getElementById('cPhone').value='';
+  document.getElementById('cEmail').value='';
+  document.getElementById('cZip').value='';
+  document.getElementById('cAddress').value='';
+  document.getElementById('cUnlockCard').style.display='none';
+  document.getElementById('cResultBox').style.display='none';
+  document.querySelector('.calc-left').style.display='block';
+  const s2=document.getElementById('cStep2');
+  s2.style.background='rgba(255,255,255,.04)';
+  s2.style.border='1px solid rgba(255,255,255,.08)';
+  s2.style.color='rgba(255,255,255,.5)';
+  cUpdatePreview();
+}
+cUpdatePreview();
+</script><script>new ResizeObserver(()=>parent.postMessage({type:'sme-height',tool:document.body.dataset.tool,height:Math.ceil(document.getElementById('toolRoot').getBoundingClientRect().height)},location.origin)).observe(document.getElementById('toolRoot'));
+window.addEventListener("message",e=>{if(e.origin===location.origin&&e.source===parent&&e.data.type==="sme-color"){cSelectedColor=e.data.color;document.getElementById("selectedColor").textContent="Selected color: "+e.data.color.replaceAll("-"," ");document.getElementById("selectedColor").hidden=false;}});</script></body></html>
